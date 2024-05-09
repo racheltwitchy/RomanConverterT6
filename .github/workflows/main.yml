@@ -1,15 +1,21 @@
+# Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
 on:
+  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Allow one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -21,18 +27,17 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v3
+      # Runs a single command using the runners shell
       - name: Set-up Node
         uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
+        with: 
+         node-version: 10.x
       - name: Install Dependencies
-        run: |
-          cd /Users/raquel/documents/RomanConverterT6
-          npm install --save-dev node-qunit-phantomjs qunit
+        run: | 
+          npm install --save-dev node-qunit-phantomjs
+          npm install --save-dev qunit
       - name: Test
-        run: |
-          cd /Users/raquel/documents/RomanConverterT6
-          node_modules/node-qunit-phantomjs/bin/node-qunit-phantomjs test.html
+        run: node_modules/node-qunit-phantomjs/bin/node-qunit-phantomjs test.html 
         
   lint:
     runs-on: ubuntu-latest   
@@ -40,16 +45,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set-up Node
         uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
+        with: 
+         node-version: 10.x
       - name: Install Dependencies
-        run: |
-          cd /Users/raquel/documents/RomanConverterT6
-          npm install eslint@latest
+        run: npm i eslint@5.16.0
       - name: Lint
-        run: |
-          cd /Users/raquel/documents/RomanConverterT6
-          node_modules/.bin/eslint romans.js  
+        run: node_modules/eslint/bin/eslint.js triangle.js  
 
   deploy:
     environment:
@@ -65,6 +66,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
+          # Upload entire repository
           path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
